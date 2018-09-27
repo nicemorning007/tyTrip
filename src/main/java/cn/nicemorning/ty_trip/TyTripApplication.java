@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TyTripApplication {
-
+    //nohup java -jar codergroup-1.0.0-SNAPSHOT.jar >temp.txt &
     public static void main(String[] args) {
         SpringApplication.run(TyTripApplication.class, args);
     }

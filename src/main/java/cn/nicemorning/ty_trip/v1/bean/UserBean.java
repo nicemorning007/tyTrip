@@ -29,15 +29,19 @@ public class UserBean {
     private String ruyuePW;
     @Column(name = "user_id")
     private String userId;
+    @Column(name = "statu")
+    private Integer statu = 0;
 
     public UserBean(String openId) {
         this.openId = openId;
     }
 
-    public UserBean(String openId, String ruyuePhone, String ruyuePW) {
+    public UserBean(String openId, String ruyuePhone, String ruyuePW,String userId,Integer statu) {
         this.openId = openId;
         this.ruyuePhone = ruyuePhone;
         this.ruyuePW = ruyuePW;
+        this.userId = userId;
+        this.statu = statu;
     }
 
     public UserBean() {
@@ -73,5 +77,24 @@ public class UserBean {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Integer getStatu() {
+        return statu;
+    }
+
+    public void setStatu(Integer statu) {
+        this.statu = statu;
+    }
+
+    @Override
+    public String toString() {
+        return "UserBean{" +
+                "openId='" + openId + '\'' +
+                ", ruyuePhone='" + ruyuePhone + '\'' +
+                ", ruyuePW='" + ruyuePW + '\'' +
+                ", userId='" + userId + '\'' +
+                ", statu=" + statu +
+                '}';
     }
 }
