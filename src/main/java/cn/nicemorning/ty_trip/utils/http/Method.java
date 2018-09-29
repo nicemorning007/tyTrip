@@ -1,12 +1,10 @@
 /*
  * Copyright (c) 2018. All Rights Reserved.
- * FileName: HttpMethod.java
+ * FileName: Method.java
  * Author: NiceMorning
  */
 
 package cn.nicemorning.ty_trip.utils.http;
-
-import okhttp3.Request;
 
 /**
  * HTTP基本方法接口
@@ -15,8 +13,9 @@ import okhttp3.Request;
  * version: 1.0
  * date: 2018/9/20
  */
-public interface HttpMethod {
-    void post(Request request);
-
-    void get(Request request);
+public enum Method {
+    POST,
+    GET,
+    ASYNC,
+    SYNC
 }

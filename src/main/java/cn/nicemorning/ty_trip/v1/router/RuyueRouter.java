@@ -6,6 +6,8 @@
 
 package cn.nicemorning.ty_trip.v1.router;
 
+import cn.nicemorning.ty_trip.utils.http.Method;
+import cn.nicemorning.ty_trip.utils.http.OkHttpHelper;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -14,9 +16,15 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 如约数据请求类
@@ -25,9 +33,15 @@ import java.io.Serializable;
  * version: 1.0
  * date: 2018/9/20
  */
+@Component
 public class RuyueRouter implements Serializable {
     private static final long serialVersionUID = 8958345593319390930L;
     private WebClient webClient;
+    private OkHttpClient client;
+    private OkHttpHelper okHttpHelper = new OkHttpHelper();
+    private Request request;
+    private Call call;
+    private Response response;
 
     /**
      * 构建一个默认的WebClient浏览器,通过getWebClient方法获取
@@ -89,6 +103,15 @@ public class RuyueRouter implements Serializable {
         webClient.getPage("http://ryxing.gzruyue.org.cn/my-order.html");
         Cookie uid = webClient.getCookieManager().getCookie("userId");
         return uid == null ? "" : uid.getValue();
+    }
+
+    public String getAllList(int count, int pageindex) throws IOException {
+        String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductGetArrayList?index=0" +
+                "&count=" + count + "&areas=0&pageindex=" + pageindex;
+        client = okHttpHelper.createClient();
+        request = okHttpHelper.createRequest(url, Method.GET, null);
+        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
+        return result != null ? result : "";
     }
 
 }

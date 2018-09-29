@@ -7,7 +7,9 @@
 package cn.nicemorning.ty_trip.utils.http;
 
 import okhttp3.*;
+import org.springframework.lang.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * version: 1.0
  * date: 2018/9/20
  */
-public class OkHttpHelper implements HttpMethod {
+public class OkHttpHelper {
     private final Map<String, List<Cookie>> cookiesMap = new HashMap<>();
     private CookieJar cookieJar = new CookieJar() {
         @Override
@@ -41,7 +43,7 @@ public class OkHttpHelper implements HttpMethod {
             List<Cookie> cookiesList = cookiesMap.get(httpUrl.host());
             //注：这里不能返回null，否则会报NULLException的错误。
             //原因：当Request 连接到网络的时候，OkHttp会调用loadForRequest()
-            return cookiesList != null ? cookiesList : new ArrayList<Cookie>();
+            return cookiesList != null ? cookiesList : new ArrayList<>();
         }
     };
 
@@ -52,18 +54,32 @@ public class OkHttpHelper implements HttpMethod {
                 .build();
     }
 
-    public Request createRequest(String url) {
-        return new Request.Builder()
-                .url(url)
-                .build();
+    public Request createRequest(String url, Method method, @Nullable RequestBody requestBody) {
+        Request request = null;
+        switch (method) {
+            case GET:
+                request = new Request.Builder()
+                        .url(url)
+                        .build();
+                break;
+            case POST:
+                request = new Request.Builder()
+                        .url(url)
+                        .post(requestBody)
+                        .build();
+                break;
+            default:
+                request = new Request.Builder()
+                        .url(url)
+                        .build();
+                break;
+        }
+        return request;
     }
 
-    @Override
-    public void post(Request request) {
-
+    public Response getResponseAsync(OkHttpClient client, Request request)
+            throws IOException {
+        return client.newCall(request).execute();
     }
 
-    @Override
-    public void get(Request request) {
-    }
 }
