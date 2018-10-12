@@ -16,14 +16,12 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -105,9 +103,69 @@ public class RuyueRouter implements Serializable {
         return uid == null ? "" : uid.getValue();
     }
 
+    /**
+     * 获取所有线路信息
+     *
+     * @param count     一次要获取的数量
+     * @param pageindex 分页的当前页数
+     * @return 如果成功返回Json字符串；否则返回null
+     * @throws IOException 异步请求出错将抛出该异常
+     */
     public String getAllList(int count, int pageindex) throws IOException {
         String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductGetArrayList?index=0" +
                 "&count=" + count + "&areas=0&pageindex=" + pageindex;
+        client = okHttpHelper.createClient();
+        request = okHttpHelper.createRequest(url, Method.GET, null);
+        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
+        return result != null ? result : "";
+    }
+
+    /**
+     * 通过站点搜索路线
+     *
+     * @param station 要搜索的站点
+     * @param userId  用户ID
+     * @return 如果成功返回Json字符串；否则返回null
+     * @throws IOException 异步请求出错将抛出该异常
+     */
+    public String findStation(String station, String userId) throws IOException {
+        String encode = URLEncoder.encode(station, "utf-8");
+        String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductGetListByStationName" +
+                "?snm=" + encode + "&userid=" + userId;
+        client = okHttpHelper.createClient();
+        request = okHttpHelper.createRequest(url, Method.GET, null);
+        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
+        return result != null ? result : "";
+    }
+
+    /**
+     * 通过用户ID分页获取该用户的所有订单
+     *
+     * @param userId 用户ID
+     * @param phone  用户如约手机号
+     * @return 如果成功返回Json字符串；否则返回null
+     * @throws IOException 异步请求出错将抛出该异常
+     */
+    public String getOrderInfoList(String userId, String phone, int index) throws IOException {
+        String url = "http://busapi.gzruyue.org.cn:8089/ruyue-intercity/v1/intercity/getOrderInfoList";
+        String json = "{\"userId\":\"" + userId + "\",\"index\":" + index + ",\"" +
+                "count\":20,\"userPhone\":\"" + phone + "\",\"isBack\":0}";
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        client = okHttpHelper.createClient();
+        request = okHttpHelper.createRequest(url, Method.POST, requestBody);
+        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
+        return result != null ? result : "";
+    }
+
+    /**
+     * 通过OID获取订单详情
+     *
+     * @param oid 订单的ID
+     * @return 如果成功返回Json字符串；否则返回null
+     * @throws IOException 异步请求出错将抛出该异常
+     */
+    public String getTicketDetail(String oid) throws IOException {
+        String url = "http://www.gzruyue.org.cn:8094/api/Order/OrderOdrTicketDetail?oid=" + oid;
         client = okHttpHelper.createClient();
         request = okHttpHelper.createRequest(url, Method.GET, null);
         String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();

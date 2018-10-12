@@ -74,4 +74,5 @@ public class UserController {
                 ResultCode.PARAMETER_ERROR.getMsg(),
                 new ErrorMessage(4000, "如约服务端出现未知异常"));
     }
+
 }

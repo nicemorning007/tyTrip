@@ -28,13 +28,13 @@ public class OkHttpHelper {
     private CookieJar cookieJar = new CookieJar() {
         @Override
         public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
-//移除相同的url的Cookie
+            //移除相同的url的Cookie
             String host = httpUrl.host();
             List<Cookie> cookiesList = cookiesMap.get(host);
             if (cookiesList != null) {
                 cookiesMap.remove(host);
             }
-            //再重新天添加
+            //再重新添加
             cookiesMap.put(host, list);
         }
 

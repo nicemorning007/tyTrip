@@ -6,8 +6,6 @@
 
 package cn.nicemorning.ty_trip.config.third.pojo;
 
-import java.util.List;
-
 /**
  * description
  * <p>
@@ -20,7 +18,8 @@ public class SimpleRuyueLinesPojo {
     private String lineRoute;
     private String lineDec;
     private int price;
-    private List<String> times;
+    //    private List<String> times;
+    private String times;
 
     public String getId() {
         return id;
@@ -54,11 +53,11 @@ public class SimpleRuyueLinesPojo {
         this.price = price;
     }
 
-    public List<String> getTimes() {
+    public String getTimes() {
         return times;
     }
 
-    public void setTimes(List<String> times) {
+    public void setTimes(String times) {
         this.times = times;
     }
 }
