@@ -1,30 +1,30 @@
 /*
  * Copyright (c) 2018. All Rights Reserved.
- * FileName: RuyueLinesRootPojo.java
+ * FileName: RuyueLineMapRootPojo.java
  * Author: NiceMorning
  */
 
 package cn.nicemorning.ty_trip.config.third.pojo;
 
+import java.util.List;
+
 /**
- * 如约线路信息封装
+ * description
  * <p>
  * author: nicemorning
  * version: 1.0
- * date: 2018/9/29
+ * date: 2018/10/14
  */
-public class RuyueLinesRootPojo {
+public class RuyueLineMapRootPojo {
 
     private boolean success;
     private int code;
     private String msg;
-    private RuyueLinesDataPojo data;
+    private List<RuyueLineMapDataPojo> data;
     private int count;
-
     public void setSuccess(boolean success) {
         this.success = success;
     }
-
     public boolean getSuccess() {
         return success;
     }
@@ -32,7 +32,6 @@ public class RuyueLinesRootPojo {
     public void setCode(int code) {
         this.code = code;
     }
-
     public int getCode() {
         return code;
     }
@@ -40,23 +39,20 @@ public class RuyueLinesRootPojo {
     public void setMsg(String msg) {
         this.msg = msg;
     }
-
     public String getMsg() {
         return msg;
     }
 
-    public void setData(RuyueLinesDataPojo data) {
+    public void setData(List<RuyueLineMapDataPojo> data) {
         this.data = data;
     }
-
-    public RuyueLinesDataPojo getData() {
+    public List<RuyueLineMapDataPojo> getData() {
         return data;
     }
 
     public void setCount(int count) {
         this.count = count;
     }
-
     public int getCount() {
         return count;
     }

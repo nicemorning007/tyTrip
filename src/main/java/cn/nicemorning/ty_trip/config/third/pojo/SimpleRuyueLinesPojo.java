@@ -20,6 +20,7 @@ public class SimpleRuyueLinesPojo {
     private int price;
     //    private List<String> times;
     private String times;
+    private String pid;
 
     public String getId() {
         return id;
@@ -59,5 +60,13 @@ public class SimpleRuyueLinesPojo {
 
     public void setTimes(String times) {
         this.times = times;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 }

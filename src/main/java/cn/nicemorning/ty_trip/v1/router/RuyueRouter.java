@@ -38,8 +38,6 @@ public class RuyueRouter implements Serializable {
     private OkHttpClient client;
     private OkHttpHelper okHttpHelper = new OkHttpHelper();
     private Request request;
-    private Call call;
-    private Response response;
 
     /**
      * 构建一个默认的WebClient浏览器,通过getWebClient方法获取
@@ -62,16 +60,16 @@ public class RuyueRouter implements Serializable {
         return webClient;
     }
 
-    /**
-     * 使用指定的WebClient获取指定url的html页面
-     *
-     * @param webClient 用来获取页面的WebClient浏览器
-     * @param url       要获取的页面的url
-     * @return 指定url的HTML页面
-     * @throws IOException 获取页面IO异常
-     */
-    public HtmlPage getHtmlPage(WebClient webClient, String url) throws IOException {
-        return webClient.getPage(url);
+    private String okhttpGetResponse(String url) {
+        client = okHttpHelper.createClient();
+        request = okHttpHelper.createRequest(url, Method.GET, null);
+        String result = null;
+        try {
+            result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result != null ? result : "";
     }
 
     /**
@@ -109,15 +107,11 @@ public class RuyueRouter implements Serializable {
      * @param count     一次要获取的数量
      * @param pageindex 分页的当前页数
      * @return 如果成功返回Json字符串；否则返回null
-     * @throws IOException 异步请求出错将抛出该异常
      */
-    public String getAllList(int count, int pageindex) throws IOException {
+    public String getAllList(int count, int pageindex) {
         String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductGetArrayList?index=0" +
                 "&count=" + count + "&areas=0&pageindex=" + pageindex;
-        client = okHttpHelper.createClient();
-        request = okHttpHelper.createRequest(url, Method.GET, null);
-        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
-        return result != null ? result : "";
+        return okhttpGetResponse(url);
     }
 
     /**
@@ -132,10 +126,7 @@ public class RuyueRouter implements Serializable {
         String encode = URLEncoder.encode(station, "utf-8");
         String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductGetListByStationName" +
                 "?snm=" + encode + "&userid=" + userId;
-        client = okHttpHelper.createClient();
-        request = okHttpHelper.createRequest(url, Method.GET, null);
-        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
-        return result != null ? result : "";
+        return okhttpGetResponse(url);
     }
 
     /**
@@ -162,14 +153,42 @@ public class RuyueRouter implements Serializable {
      *
      * @param oid 订单的ID
      * @return 如果成功返回Json字符串；否则返回null
-     * @throws IOException 异步请求出错将抛出该异常
      */
-    public String getTicketDetail(String oid) throws IOException {
+    public String getTicketDetail(String oid) {
         String url = "http://www.gzruyue.org.cn:8094/api/Order/OrderOdrTicketDetail?oid=" + oid;
-        client = okHttpHelper.createClient();
-        request = okHttpHelper.createRequest(url, Method.GET, null);
-        String result = Objects.requireNonNull(okHttpHelper.getResponseAsync(client, request).body()).string();
-        return result != null ? result : "";
+        return okhttpGetResponse(url);
+    }
+
+    /**
+     * 通过PID获取线路购票信息，如某日车次，座位等
+     *
+     * @param pid 要查询的线路PID
+     * @return 如果成功返回Json字符串；否则返回null
+     */
+    public String getLineDetail(String pid) {
+        String url = "http://www.gzruyue.org.cn:8094/api/Product/ProductDayArrayList?pid=" + pid;
+        return okhttpGetResponse(url);
+    }
+
+    /**
+     * 通过RID获取线路站点信息
+     *
+     * @param pid 要查询的线路RID
+     * @return 如果成功返回Json字符串；否则返回null
+     */
+    public String getLineMap(String pid) {
+        String url = "http://www.gzruyue.org.cn:8094/api/Station/RouteStionImgs?rid=" + pid;
+        return okhttpGetResponse(url);
+    }
+
+    /**
+     * 通过RID获取上车站点
+     * @param rid 要查询的线路RID
+     * @return 如果成功返回Json字符串；否则返回null
+     */
+    public String getUpStation(String rid) {
+        String url = "http://www.gzruyue.org.cn:8094/api/Station/RouteUpStaion?rid=" + rid;
+        return okhttpGetResponse(url);
     }
 
 }

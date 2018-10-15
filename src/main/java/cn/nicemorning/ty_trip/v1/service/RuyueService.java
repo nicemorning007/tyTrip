@@ -44,13 +44,9 @@ public class RuyueService {
             simpleRuyueLinesPojo.setId(ruyueLinesPojo.getRouteid());
             simpleRuyueLinesPojo.setLineDec(ruyueLinesPojo.getRoutedec());
             simpleRuyueLinesPojo.setLineRoute(ruyueLinesPojo.getRoutenm());
-//            List<String> times = new ArrayList<>();
-//            for (String time : ruyueLinesPojo.getProtimes().split(",")) {
-//                times.add(time);
-//            }
-//            simpleRuyueLinesPojo.setTimes(times);
             simpleRuyueLinesPojo.setTimes(ruyueLinesPojo.getProtimes());
             simpleRuyueLinesPojo.setPrice(ruyueLinesPojo.getProprice().get(0).getMon());
+            simpleRuyueLinesPojo.setPid(ruyueLinesPojo.getProitems().get(0).getProduct().getPno());
             simpleRuyueLinesPojos.add(simpleRuyueLinesPojo);
         }
         return simpleRuyueLinesPojos;
@@ -73,12 +69,7 @@ public class RuyueService {
     }
 
     public List<SimpleRuyueLinesPojo> getAllLines(int count, int pageIndex) {
-        String json = "";
-        try {
-            json = ruyueRouter.getAllList(count, pageIndex);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String json = ruyueRouter.getAllList(count, pageIndex);
         json = json.replace('/', '-');
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
@@ -121,12 +112,7 @@ public class RuyueService {
     }
 
     public TicketDetailPojo getTicketDetail(String oid) {
-        String json = "";
-        try {
-            json = ruyueRouter.getTicketDetail(oid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String json = ruyueRouter.getTicketDetail(oid);
         json = json.replace('/', '-');
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
@@ -134,6 +120,33 @@ public class RuyueService {
         TicketDetailRootPojo ticketDetailRootPojo = gson.fromJson(reader, new TypeToken<TicketDetailRootPojo>() {
         }.getType());
         return ticketDetailRootPojo.getData();
+    }
+
+    public SimpleRuyueLineDetailPojo getLineDetail(String pid, String rid) {
+        String json = ruyueRouter.getLineDetail(pid);
+        json = json.replace('/', '-');
+        JsonReader reader = new JsonReader(new StringReader(json));
+        reader.setLenient(true);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        RuyueLineDetailRootPojo ruyueLineDetailRootPojo = gson.fromJson(reader, new TypeToken<RuyueLineDetailRootPojo>() {
+        }.getType());
+        String mapJson = ruyueRouter.getLineMap(rid);
+        reader = new JsonReader(new StringReader(mapJson));
+        reader.setLenient(true);
+        RuyueLineMapRootPojo ruyueLineMapRootPojo = gson.fromJson(reader, new TypeToken<RuyueLineMapRootPojo>() {
+        }.getType());
+        return new SimpleRuyueLineDetailPojo(ruyueLineDetailRootPojo.getData(), ruyueLineMapRootPojo.getData());
+    }
+
+    public List<RuyueGetUpStationDataPojo> getUpStation(String rid) {
+        String json = ruyueRouter.getUpStation(rid);
+        JsonReader reader = new JsonReader(new StringReader(json));
+        reader.setLenient(true);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        RuyueGetUpStationRootPojo ruyueGetUpStationRootPojo = gson.fromJson(reader,
+                new TypeToken<RuyueGetUpStationRootPojo>() {
+                }.getType());
+        return ruyueGetUpStationRootPojo.getData();
     }
 
 }

@@ -6,9 +6,7 @@
 
 package cn.nicemorning.ty_trip.v1.controller;
 
-import cn.nicemorning.ty_trip.config.third.pojo.SimpleOrderPojo;
-import cn.nicemorning.ty_trip.config.third.pojo.SimpleRuyueLinesPojo;
-import cn.nicemorning.ty_trip.config.third.pojo.TicketDetailPojo;
+import cn.nicemorning.ty_trip.config.third.pojo.*;
 import cn.nicemorning.ty_trip.json.ErrorMessage;
 import cn.nicemorning.ty_trip.json.Result;
 import cn.nicemorning.ty_trip.json.ResultCode;
@@ -86,6 +84,30 @@ public class RuyueController {
         if (ticketDetailPojo != null) {
             return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(),
                     ticketDetailPojo);
+        }
+        return new Result(ResultCode.PARAMETER_ERROR.getCode(),
+                ResultCode.PARAMETER_ERROR.getMsg(),
+                new ErrorMessage(4000, "如约服务端出现未知异常"));
+    }
+
+    @RequestMapping("/getLineDetail")
+    public Result getLineDetail(String pid, String rid) {
+        SimpleRuyueLineDetailPojo simpleRuyueLineDetailPojo = ruyueService.getLineDetail(pid, rid);
+        if (simpleRuyueLineDetailPojo != null) {
+            return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(),
+                    simpleRuyueLineDetailPojo);
+        }
+        return new Result(ResultCode.PARAMETER_ERROR.getCode(),
+                ResultCode.PARAMETER_ERROR.getMsg(),
+                new ErrorMessage(4000, "如约服务端出现未知异常"));
+    }
+
+    @RequestMapping("/getUpStation")
+    public Result getLineDetail(String rid) {
+        List<RuyueGetUpStationDataPojo> ruyueGetUpStationDataPojos = ruyueService.getUpStation(rid);
+        if (ruyueGetUpStationDataPojos != null && ruyueGetUpStationDataPojos.size() > 0) {
+            return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(),
+                    ruyueGetUpStationDataPojos);
         }
         return new Result(ResultCode.PARAMETER_ERROR.getCode(),
                 ResultCode.PARAMETER_ERROR.getMsg(),

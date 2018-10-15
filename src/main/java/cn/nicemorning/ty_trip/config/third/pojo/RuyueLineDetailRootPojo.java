@@ -1,24 +1,24 @@
 /*
  * Copyright (c) 2018. All Rights Reserved.
- * FileName: RuyueLinesRootPojo.java
+ * FileName: RuyueLineDetailRootPojo.java
  * Author: NiceMorning
  */
 
 package cn.nicemorning.ty_trip.config.third.pojo;
 
 /**
- * 如约线路信息封装
+ * description
  * <p>
  * author: nicemorning
  * version: 1.0
- * date: 2018/9/29
+ * date: 2018/10/14
  */
-public class RuyueLinesRootPojo {
+public class RuyueLineDetailRootPojo {
 
     private boolean success;
     private int code;
     private String msg;
-    private RuyueLinesDataPojo data;
+    private RuyueLineDetailDataPojo data;
     private int count;
 
     public void setSuccess(boolean success) {
@@ -45,11 +45,11 @@ public class RuyueLinesRootPojo {
         return msg;
     }
 
-    public void setData(RuyueLinesDataPojo data) {
+    public void setData(RuyueLineDetailDataPojo data) {
         this.data = data;
     }
 
-    public RuyueLinesDataPojo getData() {
+    public RuyueLineDetailDataPojo getData() {
         return data;
     }
 
